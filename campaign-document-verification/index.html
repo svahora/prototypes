@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/tokens/colors.css">
+<link rel="stylesheet" href="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/tokens/typography.css">
+<link rel="stylesheet" href="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/tokens/base.css">
+<link rel="stylesheet" href="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/styles.css">
+<script src="_ds/heart-soul-launchgood-design-system-07c37b20-b922-4a7e-bfbd-b814a9a84d3e/_ds_bundle.js"></script>
+<style>
+body { margin: 0; background: var(--neutral-100, #f5f5f5); font-family: var(--font-sans); }
+a { color: var(--brand-600); } a:hover { color: var(--brand-700); }
+</style>
+</helmet>
+
+<section style="padding: 44px 48px 56px; display: flex; gap: 44px; align-items: flex-start;">
+
+<div style="width: 320px; flex: none; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; align-items: baseline; gap: 10px;">
+<span style="font: 600 10px ui-monospace, Menlo, monospace; padding: 3px 7px; background: var(--neutral-900); color: #fff; border-radius: 4px;">1a</span>
+<span style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Document verification flow</span>
+</div>
+
+<div style="background: #fff; border: 1px solid var(--border-subtle); border-radius: 16px; padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 18px;">
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: var(--text-secondary); text-wrap: pretty;">The screen after a draft is created. It names exactly what is missing, keeps every request in one checklist, and shows where each file stands with the review team.</p>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary);">Assumptions</span>
+<ul style="margin: 0; padding-left: 18px; font-size: 13px; line-height: 20px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 7px;">
+<li>The draft is saved before this step, so nothing is lost by finishing later.</li>
+<li>Requirements are decided server-side; the beneficiary answer from the campaign form adds the patient set.</li>
+<li>Review is per document, not per campaign, so one rejection does not reset the rest.</li>
+<li>Only the verification team sees uploads. Worth saying on screen.</li>
+</ul>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary);">Steps</span>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+<button onClick="{{ s.go }}" style="display: flex; align-items: center; gap: 10px; text-align: left; background: {{ s.bg }}; border: 1px solid {{ s.border }}; border-radius: 999px; padding: 8px 14px 8px 10px; cursor: pointer; font-family: var(--font-sans);" style-hover="border-color: var(--neutral-400)">
+<span style="width: 20px; height: 20px; flex: none; border-radius: 999px; background: {{ s.dot }}; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">{{ s.n }}</span>
+<span style="font-size: 13px; font-weight: 600; color: var(--text-primary);">{{ s.label }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 4px; border-top: 1px solid var(--border-subtle);">
+<div style="padding-top: 14px;">
+<div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Fundraising for someone else</div>
+<div style="font-size: 12px; color: var(--text-tertiary);">Adds the four patient documents</div>
+</div>
+<div style="padding-top: 14px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Switch" checked="{{ onBehalf }}" on-change="{{ toggleOnBehalf }}" hint-size="44px,24px"></x-import>
+</div>
+</div>
+</div>
+</div>
+
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+
+<div style="height: 100%; display: flex; flex-direction: column; background: #fff;">
+
+<div style="flex: none; padding: 62px 20px 12px; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-subtle);">
+<button onClick="{{ back }}" aria-label="Back" style="width: 44px; height: 44px; margin-left: -12px; border: none; background: none; display: flex; align-items: center; justify-content: center; color: var(--neutral-900); cursor: pointer;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="chevron-left" size="24" hint-size="24px,24px"></x-import>
+</button>
+<span style="font-size: 16px; font-weight: 600; color: var(--text-primary);">{{ navTitle }}</span>
+</div>
+
+<div style="flex: 1; overflow: auto;">
+
+<sc-if value="{{ isHub }}" hint-placeholder-val="{{ true }}">
+<div style="padding: 24px 20px 8px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Badge" label="Draft" color="yellow" hint-size="56px,24px"></x-import>
+<h1 style="margin: 14px 0 8px; font-size: 26px; line-height: 32px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); text-wrap: pretty;">Your campaign needs a few more documents to go live</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text-secondary); text-wrap: pretty;">Aisha's heart surgery fund is written and saved. We verify a handful of documents before donations open, inshaAllah.</p>
+</div>
+
+<div style="padding: 20px 20px 0;">
+<div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px;">
+<span style="font-size: 13px; font-weight: 600; color: var(--text-primary);">{{ progressText }}</span>
+<span style="font-size: 13px; color: var(--text-tertiary);">Draft saved</span>
+</div>
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.ProgressBar" value="{{ progressValue }}" height="6" hint-size="100%,6px"></x-import>
+</div>
+
+<sc-if value="{{ hasAttention }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 20px 20px 0;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.InlineBanner" tone="error" title="One document needs another look" hint-size="100%,72px">The doctor's letter is missing a signature and date. Replace it and we will review again within a day.</x-import>
+</div>
+</sc-if>
+
+<div style="padding: 24px 20px 0;">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px;">About you</div>
+<p style="margin: 0 0 12px; font-size: 13px; line-height: 19px; color: var(--text-secondary); text-wrap: pretty;">We keep these on file, so you only send them for your first campaign.</p>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{ myDocs }}" as="d" hint-placeholder-count="2">
+<button onClick="{{ d.open }}" style="display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px; min-height: 72px; background: #fff; border: 1px solid {{ d.border }}; border-radius: 12px; box-shadow: var(--shadow-sm); cursor: pointer; font-family: var(--font-sans);" style-hover="background: var(--neutral-50)">
+<span style="width: 40px; height: 40px; flex: none; border-radius: 999px; background: {{ d.iconBg }}; color: {{ d.iconColor }}; display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="{{ d.icon }}" size="20" hint-size="20px,20px"></x-import>
+</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 15px; font-weight: 600; line-height: 20px; color: var(--text-primary);">{{ d.title }}</span>
+<span style="font-size: 13px; line-height: 18px; color: var(--text-tertiary);">{{ d.sub }}</span>
+<span style="display: flex; padding-top: 4px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Badge" label="{{ d.statusLabel }}" color="{{ d.statusColor }}" type="with-dot" hint-size="90px,24px"></x-import>
+</span>
+</span>
+<span style="flex: none; color: var(--neutral-400); display: flex;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="chevron-right" size="20" hint-size="20px,20px"></x-import>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{ onBehalf }}" hint-placeholder-val="{{ true }}">
+<div style="padding: 28px 20px 0;">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px;">About Aisha, the beneficiary</div>
+<p style="margin: 0 0 12px; font-size: 13px; line-height: 19px; color: var(--text-secondary); text-wrap: pretty;">You are raising funds for someone else, so we confirm she knows and that the costs are real.</p>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{ beneficiaryDocs }}" as="d" hint-placeholder-count="4">
+<button onClick="{{ d.open }}" style="display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px; min-height: 72px; background: #fff; border: 1px solid {{ d.border }}; border-radius: 12px; box-shadow: var(--shadow-sm); cursor: pointer; font-family: var(--font-sans);" style-hover="background: var(--neutral-50)">
+<span style="width: 40px; height: 40px; flex: none; border-radius: 999px; background: {{ d.iconBg }}; color: {{ d.iconColor }}; display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="{{ d.icon }}" size="20" hint-size="20px,20px"></x-import>
+</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 15px; font-weight: 600; line-height: 20px; color: var(--text-primary);">{{ d.title }}</span>
+<span style="font-size: 13px; line-height: 18px; color: var(--text-tertiary);">{{ d.sub }}</span>
+<span style="display: flex; padding-top: 4px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Badge" label="{{ d.statusLabel }}" color="{{ d.statusColor }}" type="with-dot" hint-size="90px,24px"></x-import>
+</span>
+</span>
+<span style="flex: none; color: var(--neutral-400); display: flex;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="chevron-right" size="20" hint-size="20px,20px"></x-import>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<div style="padding: 24px 20px 24px;">
+<div style="display: flex; gap: 10px; padding: 14px; background: var(--brand-50); border-radius: 12px;">
+<span style="flex: none; color: var(--brand-700); display: flex;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="lock-closed" size="20" hint-size="20px,20px"></x-import>
+</span>
+<p style="margin: 0; font-size: 13px; line-height: 19px; color: var(--brand-700); text-wrap: pretty;">Only our verification team sees these files. They never appear on your campaign page.</p>
+</div>
+<button onClick="{{ goLibrary }}" style="display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; margin-top: 12px; padding: 14px; min-height: 60px; background: #fff; border: 1px solid var(--border-subtle); border-radius: 12px; cursor: pointer; font-family: var(--font-sans);" style-hover="background: var(--neutral-50)">
+<span style="flex: none; color: var(--neutral-600); display: flex;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="folder" size="20" hint-size="20px,20px"></x-import>
+</span>
+<span style="flex: 1; min-width: 0;">
+<span style="display: block; font-size: 15px; font-weight: 600; color: var(--text-primary);">Documents you have sent us</span>
+<span style="display: block; font-size: 13px; color: var(--text-tertiary);">{{ librarySummary }}</span>
+</span>
+<span style="flex: none; color: var(--neutral-400); display: flex;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="chevron-right" size="20" hint-size="20px,20px"></x-import>
+</span>
+</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 24px 20px 0;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Badge" label="{{ activeStatusLabel }}" color="{{ activeStatusColor }}" type="with-dot" hint-size="110px,24px"></x-import>
+<h1 style="margin: 14px 0 8px; font-size: 24px; line-height: 30px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); text-wrap: pretty;">{{ activeTitle }}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text-secondary); text-wrap: pretty;">{{ activeWhy }}</p>
+</div>
+
+<sc-if value="{{ activeShowNote }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 20px 20px 0;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.InlineBanner" tone="error" title="What to fix" hint-size="100%,72px">{{ activeNote }}</x-import>
+</div>
+</sc-if>
+
+<div style="padding: 24px 20px 0;">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 10px;">What we need to see</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<sc-for list="{{ activeBullets }}" as="b" hint-placeholder-count="3">
+<div style="display: flex; gap: 10px; align-items: flex-start;">
+<span style="flex: none; color: var(--brand-600); display: flex; padding-top: 1px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="check-circle" size="18" hint-size="18px,18px"></x-import>
+</span>
+<span style="font-size: 14px; line-height: 20px; color: var(--text-secondary); text-wrap: pretty;">{{ b.text }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{ activeHasFile }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 24px 20px 0;">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--neutral-50);">
+<span style="width: 36px; height: 36px; flex: none; border-radius: 8px; background: #fff; border: 1px solid var(--border-subtle); color: var(--neutral-500); display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="document" size="18" hint-size="18px,18px"></x-import>
+</span>
+<span style="flex: 1; min-width: 0;">
+<span style="display: block; font-size: 14px; font-weight: 600; color: var(--text-primary);">{{ activeFileName }}</span>
+<span style="display: block; font-size: 12px; color: var(--text-tertiary);">{{ activeFileMeta }}</span>
+</span>
+</div>
+</div>
+</sc-if>
+
+<div style="padding: 24px 20px 8px; display: flex; flex-direction: column; gap: 10px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Button" variant="brand" size="lg" full-width="{{ true }}" onClick="{{ startUpload }}" hint-size="100%,44px">{{ uploadLabel }}</x-import>
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Button" variant="secondary" size="lg" full-width="{{ true }}" onClick="{{ startUpload }}" hint-size="100%,44px">Choose from files</x-import>
+</div>
+
+<div style="padding: 8px 20px 24px;">
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: var(--text-tertiary); text-wrap: pretty;">JPG, PNG or PDF up to 10 MB. Make sure all four corners and every date are readable.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ isUploading }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 120px 32px 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px;">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: var(--brand-50); color: var(--brand-600); display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="arrow-up-tray" size="28" hint-size="28px,28px"></x-import>
+</span>
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; color: var(--text-primary);">Uploading {{ activeTitle }}</h1>
+<div style="width: 100%;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.ProgressBar" value="{{ pct }}" height="6" hint-size="100%,6px"></x-import>
+</div>
+<p style="margin: 0; font-size: 14px; color: var(--text-tertiary);">{{ pctLabel }}</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSubmitted }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 40px 20px 0;">
+<span style="width: 64px; height: 64px; border-radius: 999px; background: var(--brand-50); color: var(--brand-600); display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="check-circle" size="30" hint-size="30px,30px"></x-import>
+</span>
+<h1 style="margin: 20px 0 8px; font-size: 26px; line-height: 32px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); text-wrap: pretty;">JazakAllah khair, your documents are with our team</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text-secondary); text-wrap: pretty;">Most reviews finish within one business day. We will email and notify you the moment your campaign can go live, inshaAllah.</p>
+</div>
+
+<div style="padding: 28px 20px 0;">
+<div style="display: flex; flex-direction: column; gap: 0;">
+<sc-for list="{{ timeline }}" as="t" hint-placeholder-count="3">
+<div style="display: flex; gap: 14px;">
+<div style="flex: none; display: flex; flex-direction: column; align-items: center;">
+<span style="width: 22px; height: 22px; border-radius: 999px; background: {{ t.dotBg }}; border: 2px solid {{ t.dotBorder }}; display: flex; align-items: center; justify-content: center; color: #fff;"></span>
+<span style="width: 2px; flex: 1; background: {{ t.lineColor }}; min-height: 26px;"></span>
+</div>
+<div style="padding-bottom: 20px;">
+<div style="font-size: 15px; font-weight: 600; color: {{ t.titleColor }};">{{ t.title }}</div>
+<div style="font-size: 13px; line-height: 19px; color: var(--text-tertiary);">{{ t.meta }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="padding: 8px 20px 24px; display: flex; flex-direction: column; gap: 10px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Button" variant="secondary" size="lg" full-width="{{ true }}" onClick="{{ goHub }}" hint-size="100%,44px">See my documents</x-import>
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Button" variant="tertiary" size="lg" full-width="{{ true }}" onClick="{{ goHub }}" hint-size="100%,44px">Preview my campaign</x-import>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 24px 20px 0;">
+<h1 style="margin: 0 0 8px; font-size: 24px; line-height: 30px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); text-wrap: pretty;">Your documents</h1>
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text-secondary); text-wrap: pretty;">Everything you have sent our verification team, and where each file stands.</p>
+</div>
+
+<div style="padding: 26px 20px 0;">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px;">Kept on file</div>
+<p style="margin: 0 0 12px; font-size: 13px; line-height: 19px; color: var(--text-secondary); text-wrap: pretty;">Asked for once, on your first campaign. We reuse these on every campaign after that.</p>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{ onFileDocs }}" as="d" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 14px; padding: 14px; background: #fff; border: 1px solid var(--border-subtle); border-radius: 12px; box-shadow: var(--shadow-sm);">
+<span style="width: 40px; height: 40px; flex: none; border-radius: 999px; background: var(--brand-50); color: var(--brand-600); display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="{{ d.icon }}" size="20" hint-size="20px,20px"></x-import>
+</span>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 15px; font-weight: 600; line-height: 20px; color: var(--text-primary);">{{ d.title }}</span>
+<span style="font-size: 13px; line-height: 18px; color: var(--text-tertiary);">{{ d.meta }}</span>
+<span style="display: flex; padding-top: 4px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Badge" label="{{ d.statusLabel }}" color="{{ d.statusColor }}" type="with-dot" hint-size="90px,24px"></x-import>
+</span>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="padding: 28px 20px 24px;">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px;">By campaign</div>
+<div style="display: flex; flex-direction: column; gap: 22px;">
+<sc-for list="{{ libraryGroups }}" as="g" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+<span style="font-size: 15px; font-weight: 600; color: var(--text-primary);">{{ g.campaign }}</span>
+<span style="font-size: 12px; color: var(--text-tertiary); white-space: nowrap;">{{ g.date }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{ g.docs }}" as="f" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--neutral-50); border: 1px solid var(--border-subtle); border-radius: 12px;">
+<span style="width: 34px; height: 34px; flex: none; border-radius: 8px; background: #fff; border: 1px solid var(--border-subtle); color: var(--neutral-500); display: flex; align-items: center; justify-content: center;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Icon" name="document" size="18" hint-size="18px,18px"></x-import>
+</span>
+<div style="flex: 1; min-width: 0;">
+<span style="display: block; font-size: 14px; font-weight: 600; color: var(--text-primary);">{{ f.title }}</span>
+<span style="display: block; font-size: 12px; color: var(--text-tertiary);">{{ f.meta }}</span>
+</div>
+<span style="flex: none;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Badge" label="{{ f.statusLabel }}" color="{{ f.statusColor }}" hint-size="80px,24px"></x-import>
+</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
+<div style="position: sticky; bottom: 0; z-index: 5; padding: 14px 20px 34px; background: rgba(255,255,255,0.94); backdrop-filter: blur(8px); border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
+<x-import component-from-global-scope="LaunchGoodDesignSystem_07c37b.Button" variant="brand" size="lg" full-width="{{ true }}" disabled="{{ submitDisabled }}" onClick="{{ submit }}" hint-size="100%,44px">{{ submitLabel }}</x-import>
+<button onClick="{{ goHub }}" style="border: none; background: none; padding: 8px; font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--text-secondary); cursor: pointer;">Save and finish later</button>
+</div>
+</sc-if>
+
+</div>
+
+</div>
+</x-import>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;beneficiaryDifferent&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Requirements&quot;}}">
+const MY_DOCS = [
+  { id: 'id', title: 'Your government photo ID', sub: 'Passport, driving licence or national ID', icon: 'identification',
+    why: 'We confirm the person running the campaign is real, so donors know where their sadaqah goes.',
+    bullets: ['Your full name and date of birth', 'An expiry date still in the future', 'The whole card in frame, no glare'], file: 'passport-front.jpg' },
+  { id: 'bank', title: 'Proof of your bank account', sub: 'Statement or void cheque in your name', icon: 'building-library',
+    why: 'Funds are paid to a verified account in your name, so nothing is held up at payout.',
+    bullets: ['Your name and the account holder name match', 'Dated within the last three months', 'You can hide the transactions'], file: 'statement-jul.pdf' }
+];
+
+const BENEFICIARY_DOCS = [
+  { id: 'attestation', title: 'Attestation from Aisha or her guardian', sub: 'Signed permission to fundraise for her', icon: 'pencil-square',
+    why: 'Aisha is in hospital, so we ask for her written consent, or a guardian\u2019s, before donations open.',
+    bullets: ['Her name, your name and your relationship', 'A line stating she agrees to this campaign', 'Signed and dated within the last 30 days'], file: 'attestation-signed.pdf' },
+  { id: 'diagnosis', title: 'Diagnosis or treatment letter', sub: 'From the treating doctor or hospital', icon: 'clipboard-document-list',
+    why: 'A letter from the hospital tells donors the need is real without you sharing her full medical file.',
+    bullets: ['Hospital or clinic letterhead', 'The condition and the treatment planned', 'Doctor\u2019s signature and the date'], file: 'diagnosis-letter.pdf' },
+  { id: 'invoice', title: 'Invoice or estimate for the procedure', sub: 'Itemised costs from the provider', icon: 'receipt-percent',
+    why: 'The costs set your goal. An itemised estimate lets us confirm the amount you are raising.',
+    bullets: ['Provider name and contact details', 'Line items and the total amount', 'Aisha named as the patient'], file: 'surgery-estimate.pdf' },
+  { id: 'patient-id', title: 'Aisha\u2019s photo ID', sub: 'A guardian\u2019s ID if she is under 18', icon: 'user-circle',
+    why: 'We match the ID to the hospital letter so funds reach the right person.',
+    bullets: ['Name matching the diagnosis letter', 'Date of birth visible', 'A guardian ID works if she is a minor'], file: 'aisha-id.jpg' }
+];
+
+const STATUS = {
+  required: { label: 'Not uploaded', color: 'neutral' },
+  pending: { label: 'Pending review', color: 'yellow' },
+  approved: { label: 'Approved', color: 'green' },
+  attention: { label: 'Needs attention', color: 'red' }
+};
+
+const REVIEWED = { id: 'approved', bank: 'approved', attestation: 'approved', diagnosis: 'attention', invoice: 'pending', 'patient-id': 'approved' };
+const START = { id: 'approved', bank: 'pending', attestation: 'required', diagnosis: 'required', invoice: 'required', 'patient-id': 'required' };
+
+class Component extends DCLogic {
+  state = { screen: 'hub', active: 'attestation', onBehalf: null, statuses: { ...START }, pct: 0 };
+
+  get onBehalf() {
+    return this.state.onBehalf === null ? (this.props.beneficiaryDifferent ?? true) : this.state.onBehalf;
+  }
+
+  docs() {
+    return this.onBehalf ? MY_DOCS.concat(BENEFICIARY_DOCS) : MY_DOCS.slice();
+  }
+
+  status(id) { return this.state.statuses[id] || 'required'; }
+
+  row = (d) => {
+    const st = STATUS[this.status(d.id)];
+    const attention = this.status(d.id) === 'attention';
+    return {
+      ...d,
+      statusLabel: st.label,
+      statusColor: st.color,
+      border: attention ? 'var(--red-200, rgba(185,28,28,0.3))' : 'var(--border-subtle)',
+      iconBg: this.status(d.id) === 'approved' ? 'var(--brand-50)' : 'var(--neutral-100)',
+      iconColor: this.status(d.id) === 'approved' ? 'var(--brand-600)' : 'var(--neutral-600)',
+      open: () => this.setState({ screen: 'detail', active: d.id })
+    };
+  };
+
+  startUpload = () => {
+    const id = this.state.active;
+    this._pct = 8;
+    this.setState({ screen: 'uploading', pct: 8 });
+    clearInterval(this._t);
+    this._t = setInterval(() => {
+      this._pct = this._pct + 14;
+      if (this._pct >= 100) {
+        clearInterval(this._t);
+        const statuses = { ...this.state.statuses };
+        statuses[id] = 'pending';
+        this.setState({ pct: 100, screen: 'detail', statuses: statuses });
+      } else {
+        this.setState({ pct: this._pct });
+      }
+    }, 180);
+  };
+
+  componentWillUnmount() { clearInterval(this._t); }
+
+  renderVals() {
+    const docs = this.docs();
+    const done = docs.filter(d => this.status(d.id) !== 'required').length;
+    const missing = docs.length - done;
+    const active = docs.find(d => d.id === this.state.active) || docs[0];
+    const aStatus = this.status(active.id);
+    const screen = this.state.screen;
+    const stepDefs = [
+      ['Documents needed', () => this.setState({ screen: 'hub', statuses: { ...START } })],
+      ['Document detail', () => this.setState({ screen: 'detail', active: 'diagnosis', statuses: { ...START } })],
+      ['Uploading', () => { this.setState({ active: 'diagnosis' }); this.startUpload(); }],
+      ['Under review', () => this.setState({ screen: 'submitted' })],
+      ['Review results', () => this.setState({ screen: 'hub', active: 'diagnosis', statuses: { ...REVIEWED } })],
+      ['Your documents', () => this.setState({ screen: 'library', statuses: { ...REVIEWED } })]
+    ];
+    const activeStep = { hub: 0, detail: 1, uploading: 2, submitted: 3, library: 5 }[screen];
+    const hasAttention = docs.some(d => this.status(d.id) === 'attention');
+
+    return {
+      onBehalf: this.onBehalf,
+      toggleOnBehalf: () => this.setState({ onBehalf: !this.onBehalf, screen: 'hub' }),
+      steps: stepDefs.map(([label, go], i) => ({
+        n: i + 1, label, go,
+        bg: i === activeStep ? 'var(--neutral-100)' : '#fff',
+        border: i === activeStep ? 'var(--neutral-300)' : 'var(--border-subtle)',
+        dot: i === activeStep ? 'var(--brand-500)' : 'var(--neutral-400)'
+      })),
+      navTitle: screen === 'library' ? 'Your documents' : (screen === 'hub' || screen === 'submitted') ? 'Verification' : active.title.length > 26 ? 'Document' : active.title,
+      isHub: screen === 'hub',
+      isDetail: screen === 'detail',
+      isUploading: screen === 'uploading',
+      isSubmitted: screen === 'submitted',
+      isLibrary: screen === 'library',
+      goLibrary: () => this.setState({ screen: 'library' }),
+      librarySummary: this.onBehalf ? '8 files across 2 campaigns' : '4 files across 2 campaigns',
+      onFileDocs: [
+        { icon: 'identification', title: 'Government photo ID', meta: 'Passport \u00b7 verified 4 Jan 2026 \u00b7 expires 2031', statusLabel: 'On file', statusColor: 'green' },
+        { icon: 'building-library', title: 'Proof of bank account', meta: 'Statement \u00b7 verified 4 Jan 2026 \u00b7 account ending 4417', statusLabel: 'On file', statusColor: 'green' }
+      ],
+      libraryGroups: [
+        { campaign: 'Aisha\u2019s heart surgery fund', date: 'Draft \u00b7 today', docs: [
+          { title: 'attestation-signed.pdf', meta: 'Attestation \u00b7 uploaded today', statusLabel: 'Pending review', statusColor: 'yellow' },
+          { title: 'diagnosis-letter.pdf', meta: 'Diagnosis letter \u00b7 uploaded today', statusLabel: 'Needs attention', statusColor: 'red' },
+          { title: 'surgery-estimate.pdf', meta: 'Invoice \u00b7 uploaded today', statusLabel: 'Pending review', statusColor: 'yellow' },
+          { title: 'aisha-id.jpg', meta: 'Beneficiary ID \u00b7 uploaded today', statusLabel: 'Approved', statusColor: 'green' }
+        ] },
+        { campaign: 'Masjid Al-Noor roof repair', date: 'Jan 2026', docs: [
+          { title: 'photo-id-front.jpg', meta: 'Photo ID \u00b7 first campaign', statusLabel: 'Approved', statusColor: 'green' },
+          { title: 'statement-dec.pdf', meta: 'Bank proof \u00b7 first campaign', statusLabel: 'Approved', statusColor: 'green' },
+          { title: 'masjid-authorisation.pdf', meta: 'Letter from the board', statusLabel: 'Approved', statusColor: 'green' }
+        ] }
+      ],
+      showFooter: screen === 'hub',
+      back: () => this.setState({ screen: 'hub' }),
+      goHub: () => this.setState({ screen: 'hub' }),
+      startUpload: this.startUpload,
+      myDocs: MY_DOCS.map(this.row),
+      beneficiaryDocs: BENEFICIARY_DOCS.map(this.row),
+      hasAttention,
+      progressText: missing === 0 ? 'All ' + docs.length + ' documents uploaded' : done + ' of ' + docs.length + ' uploaded',
+      progressValue: Math.round((done / docs.length) * 100),
+      submitDisabled: missing > 0,
+      submitLabel: missing > 0 ? 'Upload ' + missing + ' more to submit' : 'Submit for review',
+      submit: () => this.setState({ screen: 'submitted' }),
+      activeTitle: active.title,
+      activeWhy: active.why,
+      activeBullets: active.bullets.map(text => ({ text })),
+      activeStatusLabel: STATUS[aStatus].label,
+      activeStatusColor: STATUS[aStatus].color,
+      activeShowNote: aStatus === 'attention',
+      activeNote: 'The letter has no signature or date. Ask the clinic to stamp and date it, then upload the new copy.',
+      activeHasFile: aStatus !== 'required',
+      activeFileName: active.file,
+      activeFileMeta: aStatus === 'pending' ? 'Uploaded today \u00b7 with our team' : aStatus === 'approved' ? 'Approved 12 Aug \u00b7 19 Safar' : 'Uploaded 11 Aug \u00b7 needs replacing',
+      uploadLabel: aStatus === 'required' ? 'Take a photo' : 'Replace with a new photo',
+      pct: this.state.pct,
+      pctLabel: this.state.pct + '% \u00b7 keep this screen open',
+      timeline: [
+        { title: 'Documents submitted', meta: 'Today, 4:12 pm \u00b7 20 Safar 1448', dotBg: 'var(--brand-500)', dotBorder: 'var(--brand-500)', lineColor: 'var(--brand-500)', titleColor: 'var(--text-primary)' },
+        { title: 'Our team reviews each file', meta: 'Usually within one business day', dotBg: '#fff', dotBorder: 'var(--brand-500)', lineColor: 'var(--neutral-200)', titleColor: 'var(--text-primary)' },
+        { title: 'Your campaign goes live', meta: 'You can share it the moment it opens', dotBg: '#fff', dotBorder: 'var(--neutral-300)', lineColor: 'transparent', titleColor: 'var(--text-tertiary)' }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>
